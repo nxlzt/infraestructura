@@ -1,0 +1,27 @@
+# Ejemplo sin secretos. El secreto de reenvío se configura dentro de config/paper-global.yml
+[Unit]
+Description=Servidor lobby (Paper)
+
+[Container]
+Image=docker.io/itzg/minecraft-server:java25
+ContainerName=lobby
+Network=mc.network
+User=1000
+Group=1000
+# EULA=TRUE acepta el EULA de Minecraft: leerlo antes de usarlo
+Environment=EULA=TRUE
+Environment=TYPE=PAPER
+# online-mode=false solo es seguro porque este contenedor no publica puertos
+Environment=ONLINE_MODE=FALSE
+Environment=MEMORY=1G
+Volume=/srv/minecraft/lobby:/data:U
+PodmanArgs=--memory=2g
+DropCapability=ALL
+NoNewPrivileges=true
+
+[Service]
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

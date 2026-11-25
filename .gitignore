@@ -1,0 +1,15 @@
+# Secretos: nunca se versionan
+*.key
+*.pem
+*.secret
+*.env
+wg*.conf
+id_*
+forwarding.secret
+# Datos de los servidores
+/srv/
+*.bak
+*.bak[0-9]
+.obsidian/
+.obsidian/
+.obsidian/

@@ -1,0 +1,26 @@
+# Ejemplo sin secretos. Ruta de despliegue: /etc/containers/systemd/users/<UID>/
+[Unit]
+Description=Velocity proxy (con Geyser y Floodgate)
+
+[Container]
+Image=docker.io/itzg/mc-proxy:latest
+ContainerName=proxy
+Network=mc.network
+User=1000
+Group=1000
+Environment=TYPE=VELOCITY
+Environment=MEMORY=256m
+PublishPort=10.10.10.2:25565:25577
+PublishPort=10.10.10.2:19134:19134/tcp
+PublishPort=10.10.10.2:19134:19134/udp
+Volume=/srv/minecraft/proxy:/server:U
+PodmanArgs=--memory=768m
+DropCapability=ALL
+NoNewPrivileges=true
+
+[Service]
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
