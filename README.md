@@ -70,12 +70,12 @@ Más información en docs/security.md.
 - Geyser y Floodgate con NetherNet para habilitar el juego cruzado entre Minecraft Java y Bedrock.
 - Servidor dedicado de Minecraft Bedrock con NetherNet.
 - Reenvío de puertos TCP y UDP mediante el nodo de acceso, con pruebas de conectividad de extremo a extremo.
+- Protección del perímetro: medidas adicionales para controlar y proteger el tráfico público.
 
 ### Pendiente de implementación
 
 - **Monitoreo y alertas:** integración de Prometheus, Grafana y Alertmanager.
 - **Copias de seguridad:** implementación de respaldos cifrados y pruebas de restauración.
-- **Protección del perímetro:** medidas adicionales para controlar y proteger el tráfico público.
 - **Control del tráfico saliente:** filtrado de conexiones iniciadas desde los contenedores.
 - **Exposición pública gradual:** habilitación progresiva de los servicios, acompañada de pruebas de seguridad.
 

@@ -23,6 +23,7 @@ Bloque `*nat` de `/etc/ufw/before.rules`:
 -A POSTROUTING -o wg0 -d 10.10.10.2 -p tcp -m multiport --dports 25565,19132,19134 -j MASQUERADE
 -A POSTROUTING -o wg0 -d 10.10.10.2 -p udp -m multiport --dports 19132,19134 -j MASQUERADE
 COMMIT
+
 ```
 Además: `net.ipv4.ip_forward=1`, `DEFAULT_FORWARD_POLICY="DROP"` y una regla `ufw route allow in on <if-publica> out on wg0 to 10.10.10.2 port <puerto> proto <tcp|udp>` por cada puerto.
 

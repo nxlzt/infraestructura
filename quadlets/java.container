@@ -1,4 +1,3 @@
-# Ejemplo sin secretos. El secreto de reenvío se configura dentro de config/paper-global.yml
 [Unit]
 Description=Servidor java (Paper)
 
@@ -8,16 +7,16 @@ ContainerName=java
 Network=mc.network
 User=1000
 Group=1000
-# EULA=TRUE acepta el EULA de Minecraft: leerlo antes de usarlo
 Environment=EULA=TRUE
 Environment=TYPE=PAPER
-# online-mode=false solo es seguro porque este contenedor no publica puertos
 Environment=ONLINE_MODE=FALSE
 Environment=MEMORY=1G
 Volume=/srv/minecraft/java:/data:U
 PodmanArgs=--memory=1536m
 DropCapability=ALL
 NoNewPrivileges=true
+Environment=USE_MEOWICE_FLAGS=true
+Environment=ENABLE_WHITELIST=TRUE
 
 [Service]
 Restart=on-failure

@@ -1,11 +1,9 @@
-# Ejemplo sin secretos. NetherNet usa TCP (señalización) y UDP (juego) en el mismo puerto
 [Unit]
 Description=Servidor Bedrock dedicado
 
 [Container]
 Image=docker.io/itzg/minecraft-bedrock-server:latest
 ContainerName=bedrock
-# EULA=TRUE acepta el EULA de Minecraft: leerlo antes de usarlo
 Environment=EULA=TRUE
 Environment=UID=1000
 Environment=GID=1000
@@ -20,6 +18,8 @@ PublishPort=10.10.10.2:19132:19132/udp
 Volume=/srv/minecraft/bedrock:/data
 PodmanArgs=--memory=1g
 NoNewPrivileges=true
+AddCapability=SYS_PTRACE
+Environment=ENABLE_WHITELIST=TRUE
 
 [Service]
 Restart=on-failure
