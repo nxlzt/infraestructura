@@ -12,3 +12,4 @@
 | 8 | `chown .../*.jar` no encontraba archivos | La shell exterior expande el comodín antes de entrar al espacio de nombres | `podman unshare sh -c '...'` con comillas simples | Saber dónde se expande cada comodín |
 | 9 | Desconexión inmediata al entrar a un backend nuevo | Sin reenvío moderno, el UUID era de modo offline (tercer bloque en 3) | Configurar el secreto en Paper | El UUID recibido es una prueba rápida del reenvío |
 | 10 | Una regla de firewall quedó en el equipo equivocado | Se pegó un comando sin mirar el prompt | Borrarla y comprobar el prompt antes de ejecutar | Los hábitos de verificación importan tanto como los comandos |
+| 11 | Bedrock dejó de funcionar al quitar las reglas TCP de su puerto | NetherNet usa TCP para la señalización: los contadores del DNAT mostraban cientos de paquetes TCP y casi ninguno UDP | Restaurar las reglas TCP de 19132 y 19134 | Decidir con contadores de tráfico real antes de cerrar un puerto |

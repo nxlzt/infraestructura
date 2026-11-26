@@ -12,7 +12,7 @@
 - Interfaz `wg0`, red 10.10.10.0/24, puerto 51820/udp.
 - Los nodos de casa inician la conexión hacia el nodo de acceso con keepalive de 25 s: el servidor doméstico no necesita puertos abiertos en el router.
 - Entre nodos de la misma LAN, el puerto 51820 solo acepta las IP de los demás nodos.
-- SSH solo escucha en el túnel y solo acepta al nodo de control.
+- El acceso SSH está limitado por UFW a la interfaz del túnel y a las IP del nodo de control; `sshd` restringe además los usuarios con `AllowUsers`. Pendiente: limitar también la dirección de escucha de `sshd` a la IP del túnel (ver [roadmap](roadmap.md)).
 
 ## Flujos de tráfico
 - **Java:** jugador, nodo de acceso (TCP 25565), DNAT, `wg0`, servidor doméstico (25565), Velocity, backend por la red `mc`.

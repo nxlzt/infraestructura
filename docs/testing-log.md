@@ -11,6 +11,7 @@ Cada fase terminó con una prueba verificable. Resumen:
 | 4 | Servidor Bedrock dedicado | Puerto TCP abierto con regla y cerrado sin ella | Correcto |
 | 5 | `survival`, Geyser y Floodgate | Cliente Bedrock llega a Velocity y al backend; cambio de servidor con `/server` | Correcto |
 | 6 | Reenvío por el nodo de acceso | Prueba de extremo a extremo desde internet (Java, Bedrock y Geyser) | Correcto |
+| 7 | Límites por IP en el nodo de acceso (`mcguard`) | 8 conexiones simultáneas desde el nodo de control al puerto 25565 | Correcto: se descartaron 3 |
 
 ## Comandos de las pruebas clave
 ```bash

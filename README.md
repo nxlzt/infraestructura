@@ -20,8 +20,6 @@ El proyecto busca poner en práctica conocimientos de administración de sistema
 
 ## Arquitectura
 
-mermaid
-
 ```mermaid
 graph LR
   P[Jugadores] -->|Internet| E[Nodo de acceso: Ubuntu en la nube]
@@ -37,7 +35,7 @@ graph LR
 
 Todos los contenedores se ejecutan en el servidor doméstico. El único equipo con exposición pública es el nodo de acceso, que mantiene la conectividad mediante WireGuard. El servidor doméstico no publica servicios directamente en internet.
 
-Más detalles en docs/architecture.md.
+Más detalles en [docs/architecture.md](docs/architecture.md).
 
 ---
 
@@ -55,7 +53,7 @@ Más detalles en docs/architecture.md.
 | Límites de memoria por contenedor | Evitar que un servidor consuma todos los recursos disponibles del host |
 | Cortafuegos en tres capas: nube, nodo de acceso y servidor | Aplicar defensa en profundidad y facilitar el diagnóstico de problemas de red |
 
-Más información en docs/security.md.
+Más información en [docs/security.md](docs/security.md).
 
 ---
 
@@ -66,20 +64,24 @@ Más información en docs/security.md.
 - Red privada WireGuard de cuatro nodos, con reglas UFW basadas en interfaz y dirección IP de origen.
 - Acceso SSH restringido al túnel WireGuard. Los escaneos internos con Nmap únicamente detectan el puerto SSH.
 - Podman 5.4 rootless integrado con Quadlet y systemd. Inicio automático de los servicios comprobado después de reiniciar el servidor.
-- Velocity configurado con reenvío moderno y servidores Paper detrás del proxy (`java`, `survival` y `lobby`, actualmente en integración).
+- Velocity configurado con reenvío moderno y servidores Paper detrás del proxy (`java`, `survival` y `lobby`).
 - Geyser y Floodgate con NetherNet para habilitar el juego cruzado entre Minecraft Java y Bedrock.
 - Servidor dedicado de Minecraft Bedrock con NetherNet.
 - Reenvío de puertos TCP y UDP mediante el nodo de acceso, con pruebas de conectividad de extremo a extremo.
-- Protección del perímetro: medidas adicionales para controlar y proteger el tráfico público.
+- Defensa del borde en el nodo de acceso: límites de conexiones y de ritmo por IP con nftables, y bloqueo automático con CrowdSec y su lista comunitaria. Detalle en [docs/edge-defense.md](docs/edge-defense.md).
 
 ### Pendiente de implementación
 
-- **Monitoreo y alertas:** integración de Prometheus, Grafana y Alertmanager.
-- **Copias de seguridad:** implementación de respaldos cifrados y pruebas de restauración.
-- **Control del tráfico saliente:** filtrado de conexiones iniciadas desde los contenedores.
-- **Exposición pública gradual:** habilitación progresiva de los servicios, acompañada de pruebas de seguridad.
+- **Monitoreo y alertas:** Prometheus, Grafana y Alertmanager.
+- **Copias de seguridad:** respaldos cifrados con pruebas de restauración.
+- **Defensa del borde (continuación):** recuperar la IP real del jugador mediante PROXY protocol.
+- **Control del tráfico saliente:** filtrado de las conexiones iniciadas desde los contenedores.
+- **Endurecimiento de SSH:** escucha exclusiva en la IP del túnel.
+- **Exposición pública gradual:** habilitación progresiva de los servicios, con pruebas de seguridad en cada etapa.
 
-Hoja de ruta completa en docs/roadmap.md.
+Como continuación, un segundo proyecto se centrará en la defensa y la auditoría de la infraestructura en tiempo real.
+
+Hoja de ruta completa en [docs/roadmap.md](docs/roadmap.md).
 
 ---
 
@@ -93,23 +95,23 @@ Algunos de los problemas técnicos más relevantes encontrados durante el desarr
 4. **Diagnóstico de firewalls:** cuando existen tres capas de filtrado, es necesario revisar cada una por separado mediante contadores de paquetes y capturas con `tcpdump`.
 5. **Compatibilidad de NetherNet:** la implementación moderna para Bedrock requiere tráfico TCP y UDP en el mismo puerto en ambos extremos. Las pruebas diseñadas exclusivamente para RakNet no son suficientes.
 
-Las diez lecciones documentadas, con sus respectivos síntomas, causas y soluciones, se encuentran en docs/lessons-learned.md.
+Las once lecciones documentadas, con sus respectivos síntomas, causas y soluciones, se encuentran en [docs/lessons-learned.md](docs/lessons-learned.md).
 
 ---
 
 ## Estructura del repositorio
 
-text
-
 ```text
 README.md
+_config.yml
 docs/
 ├── architecture.md
+├── network-and-firewall.md
+├── edge-defense.md
 ├── security.md
-├── users.md
+├── users-and-permissions.md
 ├── podman-quadlet.md
-├── network.md
-├── tests.md
+├── testing-log.md
 ├── lessons-learned.md
 └── roadmap.md
 
@@ -123,7 +125,7 @@ quadlets/
 ## Tecnologías utilizadas
 
 - **Sistemas operativos:** Debian 13, Ubuntu, Fedora y Arch Linux.
-- **Redes y seguridad:** WireGuard, UFW, iptables y NAT.
+- **Redes y seguridad:** WireGuard, UFW, nftables, iptables, NAT y CrowdSec.
 - **Contenedores:** Podman 5.4 rootless, Quadlet y systemd.
 - **Minecraft:** Velocity, Paper, Geyser, Floodgate y Bedrock Dedicated Server.
 - **Diagnóstico y administración:** tcpdump, Nmap y SSH.

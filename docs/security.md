@@ -1,14 +1,14 @@
-kk# Seguridad
+# Seguridad
 
 ## Modelo de amenazas (resumen)
 
 | Activo | Amenaza | Control |
 |---|---|---|
 | Servidor doméstico | Acceso remoto no autorizado | SSH solo por el túnel, sin contraseña, `AllowUsers`, sin puertos innecesarios |
-| Contenedores | Escape o abuso desde un servidor comprometido | Rootless, usuario sin `sudo`, quadlets de root, ... |
-| Backends `online-mode=false` | Conexión directa suplantando jugadores | Sin puertos publicados; solo el proxy ... |
-| Nodo de acceso | Servicio expuesto a internet | Solo 51820/udp propio y puertos de juego reenviados; SSH solo ... |
-| Secretos (claves WireGuard, secreto de reenvío, clave de Floodgate) | Fuga | Modo 600, fuera de Git, sin variables ... |
+| Contenedores | Escape o abuso desde un servidor comprometido | Rootless, usuario sin `sudo`, quadlets de root, `DropCapability=ALL` y `NoNewPrivileges` en el proxy y los servidores Java, límites de memoria |
+| Backends `online-mode=false` | Conexión directa suplantando jugadores | Sin puertos publicados; solo el proxy los alcanza; reenvío con secreto |
+| Nodo de acceso | Servicio expuesto a internet | Solo 51820/udp propio y puertos de juego reenviados; SSH solo por el túnel; límites por IP y bloqueo automático ([detalle](edge-defense.md)) |
+| Secretos (claves WireGuard, secreto de reenvío, clave de Floodgate) | Fuga | Modo 600, fuera de Git, sin variables de entorno en contenedores |
 | Nodo de control | Es el punto único de compromiso | Llaves con passphrase; llave hardware como mejora |
 
 ## Controles verificados
@@ -23,8 +23,9 @@ kk# Seguridad
 
 - **IP real del jugador:** se pierde en el enmascaramiento y en el reenvío de puertos de Podman.
 - **Salida de contenedores sin filtrar:** un contenedor comprometido podría intentar alcanzar la LAN y el túnel.
-- **Protección contra DDoS volumétrico:** la instancia gratuita no la incluye.
+- **Protección contra DDoS volumétrico:** la instancia gratuita no la incluye; los límites por IP mitigan el abuso por conexión, no la saturación del enlace.
 - **Plugins en versiones de desarrollo (Geyser y Floodgate):** requieren actualización frecuente.
+- **Imágenes sin versión fija:** `proxy` y `bedrock` usan la etiqueta `latest`, por lo que una actualización de la imagen puede cambiar su comportamiento sin aviso.
 - **Dirección anunciada por NetherNet:** por verificar que no revele la IP doméstica en los candidatos ICE.
 
 ## Gestión de secretos
@@ -43,46 +44,6 @@ kk# Seguridad
 - Sin identificadores de jugadores (UUID, gamertags).
 - `gitleaks detect` sin hallazgos.
 
-## CrowdSec
+## Defensa del borde
 
-### Instalación
-
-Descargar el instalador, revisarlo y ejecutarlo:
-
-```bash
-curl -fsSL https://install.crowdsec.net -o crowdsec-install.sh
-less crowdsec-install.sh
-sudo sh crowdsec-install.sh
-```
-
-Comprobar si el paquete está disponible y, si hace falta, instalarlo desde los repositorios:
-
-```bash
-apt list crowdsec
-sudo apt install crowdsec
-```
-
-### Comprobaciones
-
-```bash
-sudo systemctl is-active crowdsec
-sudo cscli capi status
-sudo cscli collections list
-sudo cscli metrics
-```
-
-### Instalación del bouncer de firewall
-
-```bash
-sudo apt install crowdsec-firewall-bouncer-nftables
-sudo nano /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml
-```
-
-Después de revisar y guardar la configuración:
-
-```bash
-sudo systemctl restart crowdsec-firewall-bouncer
-sudo systemctl is-active crowdsec-firewall-bouncer
-```
-
-
+Los límites por IP, CrowdSec y el hallazgo sobre el tráfico TCP de Bedrock están documentados en [edge-defense.md](edge-defense.md).
